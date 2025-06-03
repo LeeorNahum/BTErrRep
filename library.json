@@ -1,0 +1,19 @@
+{
+  "name": "BTErrRep",
+  "version": "1.0.0",
+  "description": "A Bluetooth Error Report Service implementation using NimBLE for ESP32.",
+  "keywords": ["BLE", "NimBLE", "Error Report", "Alert Notification Service", "ESP32", "Bluetooth"],
+  "homepage": "https://github.com/LeeorNahum/BTErrRep",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LeeorNahum/BTErrRep.git"
+  },
+  "authors":  [
+    {
+      "name": "Leeor Nahum",
+      "email": "leeornahum@gmail.com"
+    }
+  ],
+  "frameworks": ["arduino", "espidf"],
+  "platforms": "*"
+} 
