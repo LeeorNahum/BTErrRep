@@ -1,35 +1,4 @@
-#include "error_reporting.h"
-
-void bleStartErrorReportingService() {
-  BTErrRep error_report = BTErrRep(NimBLEDevice::getServer());
-  
-  // Check for previous crash and report it
-  checkAndReportCrash(error_report);
-  
-  error_report.startService();
-}
-
-void setupErrorReporting(NimBLEServer* server) {
-  // Legacy function - kept for backward compatibility
-  BTErrRep errorReport(server);
-  errorReport.startService();
-  
-  // Demonstrate various error scenarios
-  Serial.println("Setting up error reporting with example scenarios...");
-  
-  // Simulate startup system check with no errors
-  errorReport.reportError(AlertLevel::NO_ALERT, 2000, "System startup complete");
-  
-  delay(1000);
-  
-  // Simulate a mild alert condition
-  errorReport.reportError(AlertLevel::MILD_ALERT, 2001, "Low battery warning");
-  
-  delay(2000);
-  
-  // Clear the alert
-  errorReport.reportError(AlertLevel::NO_ALERT, 2002, "Battery level normalized");
-}
+#include "ble_error_report_service.h"
 
 void checkAndReportCrash(BTErrRep& error_report) {
   // Check ESP32 reset reason
@@ -117,8 +86,17 @@ void checkAndReportCrash(BTErrRep& error_report) {
       break;
       
     default:
-      Serial.println("Unknown reset reason code");
+      Serial.println("Unknown reset reason");
       error_report.reportError(AlertLevel::MILD_ALERT, 1007, "Unhandled reset reason");
       break;
   }
-} 
+}
+
+void bleStartErrorReportService() {
+  BTErrRep error_report = BTErrRep(NimBLEDevice::getServer());
+  
+  error_report.startService();
+  
+  // Check for previous crash and report it
+  checkAndReportCrash(error_report);
+}

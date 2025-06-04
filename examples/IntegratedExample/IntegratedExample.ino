@@ -1,5 +1,5 @@
 #include <NimBLEDevice.h>
-#include "error_reporting.h"
+#include "ble_error_report_service.h"
 
 // Example BLE service and characteristic
 const NimBLEUUID SERVICE_UUID        ("806374b1-bd94-4761-a4a6-af96723f5cbd");
@@ -28,7 +28,7 @@ void setup() {
   mainService->start();
   
   // Start error reporting service - this will check for crashes and report them
-  bleStartErrorReportingService();
+  bleStartErrorReportService();
   
   // Start advertising
   NimBLEDevice::getAdvertising()->start();
