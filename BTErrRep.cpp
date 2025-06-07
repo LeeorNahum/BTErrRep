@@ -5,17 +5,15 @@
  * @param server A pointer to the server instance this Error Report Service will use
  * @note This service exposes error information including alert level, emergency ID, emergency text, and device time.
  */
-BTErrRep::BTErrRep(NimBLEServer* server) {
-  if (server == nullptr) return;
-  
-  error_service = nullptr;
-  
-  alert_level_characteristic = nullptr;
-  emergency_id_characteristic = nullptr;
-  emergency_text_characteristic = nullptr;
-  device_time_characteristic = nullptr;
-  
-  error_service = server->createService(ALERT_NOTIFICATION_SERVICE_UUID);
+BTErrRep::BTErrRep(NimBLEServer* server)
+    : error_report_service(nullptr),
+      alert_level_characteristic(nullptr),
+      emergency_id_characteristic(nullptr),
+      emergency_text_characteristic(nullptr),
+      device_time_characteristic(nullptr) {
+  if (server != nullptr) {
+    error_report_service = server->createService(ALERT_NOTIFICATION_SERVICE_UUID);
+  }
 }
 
 /**
@@ -23,13 +21,13 @@ BTErrRep::BTErrRep(NimBLEServer* server) {
  * @return true if the service was started successfully, false otherwise
  */
 bool BTErrRep::startService() {
-  if (error_service) {
+  if (error_report_service) {
     createAlertLevelCharacteristic();
     createEmergencyIDCharacteristic();
     createEmergencyTextCharacteristic();
     createDeviceTimeCharacteristic();
-    
-    return error_service->start();
+
+    return error_report_service->start();
   }
   return false;
 }
@@ -52,9 +50,9 @@ void BTErrRep::setupDescriptors(NimBLECharacteristic* characteristic, const char
 }
 
 void BTErrRep::createAlertLevelCharacteristic() {
-  if (error_service == nullptr || alert_level_characteristic != nullptr) return;
-  
-  alert_level_characteristic = error_service->createCharacteristic(
+  if (error_report_service == nullptr || alert_level_characteristic != nullptr) return;
+
+  alert_level_characteristic = error_report_service->createCharacteristic(
     ALERT_LEVEL_CHARACTERISTIC_UUID,
     NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY
   );
@@ -62,9 +60,9 @@ void BTErrRep::createAlertLevelCharacteristic() {
 }
 
 void BTErrRep::createEmergencyIDCharacteristic() {
-  if (error_service == nullptr || emergency_id_characteristic != nullptr) return;
-  
-  emergency_id_characteristic = error_service->createCharacteristic(
+  if (error_report_service == nullptr || emergency_id_characteristic != nullptr) return;
+
+  emergency_id_characteristic = error_report_service->createCharacteristic(
     EMERGENCY_ID_CHARACTERISTIC_UUID,
     NIMBLE_PROPERTY::READ
   );
@@ -72,9 +70,9 @@ void BTErrRep::createEmergencyIDCharacteristic() {
 }
 
 void BTErrRep::createEmergencyTextCharacteristic() {
-  if (error_service == nullptr || emergency_text_characteristic != nullptr) return;
-  
-  emergency_text_characteristic = error_service->createCharacteristic(
+  if (error_report_service == nullptr || emergency_text_characteristic != nullptr) return;
+
+  emergency_text_characteristic = error_report_service->createCharacteristic(
     EMERGENCY_TEXT_CHARACTERISTIC_UUID,
     NIMBLE_PROPERTY::READ
   );
@@ -82,9 +80,9 @@ void BTErrRep::createEmergencyTextCharacteristic() {
 }
 
 void BTErrRep::createDeviceTimeCharacteristic() {
-  if (error_service == nullptr || device_time_characteristic != nullptr) return;
-  
-  device_time_characteristic = error_service->createCharacteristic(
+  if (error_report_service == nullptr || device_time_characteristic != nullptr) return;
+
+  device_time_characteristic = error_report_service->createCharacteristic(
     DEVICE_TIME_CHARACTERISTIC_UUID,
     NIMBLE_PROPERTY::READ
   );
@@ -101,7 +99,7 @@ void BTErrRep::createDeviceTimeCharacteristic() {
  * @note This method atomically updates all error characteristics and sends notification for alert level
  */
 bool BTErrRep::reportError(AlertLevel alert_level, uint16_t emergency_id, const std::string& emergency_text, uint32_t timestamp) {
-  if (error_service == nullptr) return false;
+  if (error_report_service == nullptr) return false;
   if (alert_level_characteristic == nullptr || emergency_id_characteristic == nullptr || emergency_text_characteristic == nullptr || device_time_characteristic == nullptr) return false;
   
   alert_level_characteristic->setValue(static_cast<uint8_t>(alert_level));
