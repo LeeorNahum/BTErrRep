@@ -2,6 +2,8 @@
 #define BTERRREP_H
 
 #include <NimBLEDevice.h>
+#include <Arduino.h>
+#include <string>
 
 const NimBLEUUID ALERT_NOTIFICATION_SERVICE_UUID("1811");
 
@@ -32,7 +34,7 @@ class BTErrRep {
     
     bool reportError(AlertLevel alert_level, uint16_t emergency_id = 0, const std::string& emergency_text = "", uint32_t timestamp = millis());
     
-    NimBLEService* getService() { return error_service; }
+    NimBLEService* getErrorReportService() { return error_report_service; }
     
     NimBLECharacteristic* getAlertLevelCharacteristic() { return alert_level_characteristic; }
     NimBLECharacteristic* getEmergencyIDCharacteristic() { return emergency_id_characteristic; }
@@ -40,7 +42,7 @@ class BTErrRep {
     NimBLECharacteristic* getDeviceTimeCharacteristic() { return device_time_characteristic; }
     
   private:
-    NimBLEService* error_service;
+    NimBLEService* error_report_service;
     
     NimBLECharacteristic* alert_level_characteristic;
     NimBLECharacteristic* emergency_id_characteristic;
