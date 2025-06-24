@@ -9,11 +9,11 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) delay(10);
   
-  Serial.println("BTErrRep Integration Example");
-  Serial.println("This demonstrates ESP32 crash detection and error reporting");
+  Serial.println("BTErrRep Reset Reason Example");
+  Serial.println("This demonstrates ESP32 reset reason detection and error reporting");
   
   // Initialize BLE
-  NimBLEDevice::init("My BLE Device");
+  NimBLEDevice::init("Reset Reason Monitor");
   
   // Create the server
   NimBLEServer *server = NimBLEDevice::createServer();
@@ -24,18 +24,18 @@ void setup() {
     CHARACTERISTIC_UUID,
     NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE
   );
-  characteristic->setValue("Hello World");
+  characteristic->setValue("Reset Monitor");
   mainService->start();
   
-  // Start error reporting service - this will check for crashes and report them
+  // Start error reporting service - this will check for reset reasons and report them
   bleStartErrorReportService();
   
   // Start advertising
   NimBLEDevice::getAdvertising()->start();
   
-  Serial.println("Main service and Error Report Service started");
+  Serial.println("Main service and Reset Reason Error Report Service started");
   Serial.println("Advertising started");
-  Serial.println("Error report service will check for ESP32 crashes on startup");
+  Serial.println("Error report service will check ESP32 reset reasons on startup");
 }
 
 void loop() {

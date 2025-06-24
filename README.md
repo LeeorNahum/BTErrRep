@@ -53,6 +53,13 @@ void setup() {
 }
 ```
 
+## Examples
+
+- **[BasicErrorReport](examples/BasicErrorReport/)** - Simple error reporting
+- **[ResetReasonExample](examples/ResetReasonExample/)** - ESP32 reset reason detection and reporting
+- **[CrashDumpExample](examples/CrashDumpExample/)** - ESP32 core dump analysis and crash detection
+- **[SerialCommand](examples/SerialCommand/)** - Serial command interface for testing
+
 ## Alert Levels
 
 The library uses a type-safe enum for alert levels based on the BLE Alert Notification Service specification:
@@ -78,15 +85,15 @@ Creates a new BTErrRep instance using the provided BLE server.
 ### Methods
 
 ```cpp
-void startService()
+bool startService()
 ```
 
 Starts the error report service. Must be called before using `reportError()`.
 
 ```cpp
-void reportError(AlertLevel alert_level, 
+bool reportError(AlertLevel alert_level, 
                 uint16_t emergency_id = 0, 
-                const String& emergency_text = "", 
+                const std::string& emergency_text = "", 
                 uint32_t timestamp = millis())
 ```
 
