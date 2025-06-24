@@ -56,7 +56,7 @@ void BTErrRep::createAlertLevelCharacteristic() {
     ALERT_LEVEL_CHARACTERISTIC_UUID,
     NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY
   );
-  setupDescriptors(alert_level_characteristic, "Alert Level", NimBLE2904::FORMAT_UINT8, 0x00, 0x0000, 0x01, 0x0000);
+  setupDescriptors(alert_level_characteristic, "Alert Level", NimBLE2904::FORMAT_UINT8, 0x00, 0x2700, 0x01, 0x0000);
 }
 
 void BTErrRep::createEmergencyIDCharacteristic() {
@@ -66,7 +66,7 @@ void BTErrRep::createEmergencyIDCharacteristic() {
     EMERGENCY_ID_CHARACTERISTIC_UUID,
     NIMBLE_PROPERTY::READ
   );
-  setupDescriptors(emergency_id_characteristic, "Emergency ID", NimBLE2904::FORMAT_UINT16, 0x00, 0x0000, 0x01, 0x0000);
+  setupDescriptors(emergency_id_characteristic, "Emergency ID", NimBLE2904::FORMAT_UINT16, 0x00, 0x2700, 0x01, 0x0000);
 }
 
 void BTErrRep::createEmergencyTextCharacteristic() {
@@ -76,7 +76,7 @@ void BTErrRep::createEmergencyTextCharacteristic() {
     EMERGENCY_TEXT_CHARACTERISTIC_UUID,
     NIMBLE_PROPERTY::READ
   );
-  setupDescriptors(emergency_text_characteristic, "Emergency Text", NimBLE2904::FORMAT_UTF8, 0x00, 0x0000, 0x01, 0x0000);
+  setupDescriptors(emergency_text_characteristic, "Emergency Text", NimBLE2904::FORMAT_UTF8, 0x00, 0x2700, 0x01, 0x0000);
 }
 
 void BTErrRep::createDeviceTimeCharacteristic() {
@@ -86,7 +86,7 @@ void BTErrRep::createDeviceTimeCharacteristic() {
     DEVICE_TIME_CHARACTERISTIC_UUID,
     NIMBLE_PROPERTY::READ
   );
-  setupDescriptors(device_time_characteristic, "Device Time", NimBLE2904::FORMAT_UINT32, 0x00, 0x0000, 0x01, 0x0000);
+  setupDescriptors(device_time_characteristic, "Device Time", NimBLE2904::FORMAT_UINT32, 0x00, 0x2700, 0x01, 0x0000);
 }
 
 /**
