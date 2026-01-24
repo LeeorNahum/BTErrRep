@@ -27,14 +27,13 @@ enum class AlertLevel : uint8_t {
  * @note This class implements a Bluetooth error reporting service which provides error information including alert level, emergency ID, emergency text, and device time.
  * @note Alert levels: No Alert, Mild Alert, High Alert
  */
-class BTErrRep {
+class BTErrRepClass {
   public:
-    BTErrRep(NimBLEServer* server);
     bool startService();
     
     bool reportError(AlertLevel alert_level, uint16_t emergency_id = 0, const std::string& emergency_text = "", uint32_t timestamp = millis());
     
-    NimBLEService* getErrorReportService() { return error_report_service; }
+    NimBLEService* getService() { return error_report_service; }
     
     NimBLECharacteristic* getAlertLevelCharacteristic() { return alert_level_characteristic; }
     NimBLECharacteristic* getEmergencyIDCharacteristic() { return emergency_id_characteristic; }
@@ -42,12 +41,12 @@ class BTErrRep {
     NimBLECharacteristic* getDeviceTimeCharacteristic() { return device_time_characteristic; }
     
   private:
-    NimBLEService* error_report_service;
+    NimBLEService* error_report_service = nullptr;
     
-    NimBLECharacteristic* alert_level_characteristic;
-    NimBLECharacteristic* emergency_id_characteristic;
-    NimBLECharacteristic* emergency_text_characteristic;
-    NimBLECharacteristic* device_time_characteristic;
+    NimBLECharacteristic* alert_level_characteristic = nullptr;
+    NimBLECharacteristic* emergency_id_characteristic = nullptr;
+    NimBLECharacteristic* emergency_text_characteristic = nullptr;
+    NimBLECharacteristic* device_time_characteristic = nullptr;
     
     void setupDescriptors(NimBLECharacteristic* characteristic, const char* user_description, uint8_t format, int8_t exponent, uint16_t unit, uint8_t namespace_value, uint16_t description);
     
@@ -57,4 +56,6 @@ class BTErrRep {
     void createDeviceTimeCharacteristic();
 };
 
-#endif // BTERRREP_H 
+extern BTErrRepClass BTErrRep;
+
+#endif // BTERRREP_H
