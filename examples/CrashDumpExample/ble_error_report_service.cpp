@@ -1,6 +1,6 @@
 #include "ble_crash_dump_service.h"
 
-void checkAndReportCrashDump(BTErrRep& error_report) {
+void checkAndReportCrashDump(BTErrRepClass& error_report) {
   // Initialize core dump system
   esp_core_dump_init();
   
@@ -60,10 +60,8 @@ void checkAndReportCrashDump(BTErrRep& error_report) {
 }
 
 void bleStartCrashDumpService() {
-  BTErrRep error_report = BTErrRep(NimBLEDevice::getServer());
-  
-  error_report.startService();
+  BTErrRep.startService();
   
   // Check for previous crash dump and report it
-  checkAndReportCrashDump(error_report);
+  checkAndReportCrashDump(BTErrRep);
 } 

@@ -1,6 +1,6 @@
 #include "ble_error_report_service.h"
 
-void checkAndReportCrash(BTErrRep& error_report) {
+void checkAndReportCrash(BTErrRepClass& error_report) {
   // Check ESP32 reset reason
   esp_reset_reason_t reset_reason = esp_reset_reason();
   
@@ -93,10 +93,8 @@ void checkAndReportCrash(BTErrRep& error_report) {
 }
 
 void bleStartErrorReportService() {
-  BTErrRep error_report = BTErrRep(NimBLEDevice::getServer());
-  
-  error_report.startService();
+  BTErrRep.startService();
   
   // Check for previous crash and report it
-  checkAndReportCrash(error_report);
+  checkAndReportCrash(BTErrRep);
 }

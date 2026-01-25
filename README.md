@@ -38,18 +38,18 @@ The [BasicErrorReport](examples/BasicErrorReport/BasicErrorReport.ino) example s
 void setup() {
   // Initialize BLE
   NimBLEDevice::init("Error Reporter");
+  NimBLEDevice::createServer();
   
-  // Create Error Report Service
-  BTErrRep errorReport(NimBLEDevice::createServer());
-  errorReport.startService();
+  // Start Error Report Service
+  BTErrRep.startService();
   
   // Start advertising
   NimBLEDevice::getAdvertising()->start();
   
   // Report errors using type-safe enum
-  errorReport.reportError(AlertLevel::MILD_ALERT, 100, "Sensor calibration needed");
-  errorReport.reportError(AlertLevel::HIGH_ALERT, 200, "Temperature critical");
-  errorReport.reportError(AlertLevel::NO_ALERT, 0, "System normal");
+  BTErrRep.reportError(AlertLevel::MILD_ALERT, 100, "Sensor calibration needed");
+  BTErrRep.reportError(AlertLevel::HIGH_ALERT, 200, "Temperature critical");
+  BTErrRep.reportError(AlertLevel::NO_ALERT, 0, "System normal");
 }
 ```
 
@@ -74,13 +74,26 @@ enum class AlertLevel : uint8_t {
 
 ## API Reference
 
-### Constructor
+### Singleton Access
+
+The library uses a singleton pattern. Access the service through the global `BTErrRep` instance:
 
 ```cpp
-BTErrRep(NimBLEServer* server)
+BTErrRep.startService();
+BTErrRep.reportError(AlertLevel::HIGH_ALERT, 100, "Error message");
 ```
 
-Creates a new BTErrRep instance using the provided BLE server.
+### Static UUIDs
+
+Access service and characteristic UUIDs via the class:
+
+```cpp
+BTErrRepClass::SERVICE_UUID                    // Service UUID (0x1811)
+BTErrRepClass::ALERT_LEVEL_CHARACTERISTIC_UUID // Alert Level (0x2A06)
+BTErrRepClass::EMERGENCY_ID_CHARACTERISTIC_UUID // Emergency ID (0x2B2D)
+BTErrRepClass::EMERGENCY_TEXT_CHARACTERISTIC_UUID // Emergency Text (0x2B2E)
+BTErrRepClass::DEVICE_TIME_CHARACTERISTIC_UUID // Device Time (0x2B90)
+```
 
 ### Methods
 
@@ -88,7 +101,7 @@ Creates a new BTErrRep instance using the provided BLE server.
 bool startService()
 ```
 
-Starts the error report service. Must be called before using `reportError()`.
+Starts the error report service. Must be called after `NimBLEDevice::createServer()`.
 
 ```cpp
 bool reportError(AlertLevel alert_level, 

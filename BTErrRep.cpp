@@ -1,19 +1,21 @@
 #include "BTErrRep.h"
 
+const NimBLEUUID BTErrRepClass::SERVICE_UUID("1811");
+
+const NimBLEUUID BTErrRepClass::ALERT_LEVEL_CHARACTERISTIC_UUID("2A06");
+const NimBLEUUID BTErrRepClass::EMERGENCY_ID_CHARACTERISTIC_UUID("2B2D");
+const NimBLEUUID BTErrRepClass::EMERGENCY_TEXT_CHARACTERISTIC_UUID("2B2E");
+const NimBLEUUID BTErrRepClass::DEVICE_TIME_CHARACTERISTIC_UUID("2B90");
+
 BTErrRepClass BTErrRep;
 
-/**
- * @brief Start the Error Report service
- * @return true if the service was started successfully, false otherwise
- * @note This service exposes error information including alert level, emergency ID, emergency text, and device time.
- */
 bool BTErrRepClass::startService() {
   NimBLEServer* pServer = NimBLEDevice::getServer();
   if (pServer == nullptr) return false;
 
-  error_report_service = pServer->getServiceByUUID(ALERT_NOTIFICATION_SERVICE_UUID);
+  error_report_service = pServer->getServiceByUUID(SERVICE_UUID);
   if (error_report_service == nullptr) {
-    error_report_service = pServer->createService(ALERT_NOTIFICATION_SERVICE_UUID);
+    error_report_service = pServer->createService(SERVICE_UUID);
   }
 
   createAlertLevelCharacteristic();
@@ -30,7 +32,7 @@ void BTErrRepClass::setupDescriptors(NimBLECharacteristic* characteristic, const
   NimBLEDescriptor* user_description = characteristic->createDescriptor(NimBLEUUID("2901"), NIMBLE_PROPERTY::READ);
   user_description->setValue(description_text);
   
-  NimBLE2904* presentation_format = (NimBLE2904*)characteristic->createDescriptor(NimBLEUUID("2904"));
+  NimBLE2904* presentation_format = (NimBLE2904*)characteristic->createDescriptor(NimBLEUUID("2904"), NIMBLE_PROPERTY::READ);
   presentation_format->setFormat(format);
   presentation_format->setExponent(exponent);
   presentation_format->setUnit(unit);
@@ -98,15 +100,6 @@ void BTErrRepClass::createDeviceTimeCharacteristic() {
   }
 }
 
-/**
- * @brief Report an error with alert level, emergency ID, emergency text, and timestamp
- * @param alert_level Alert level (NO_ALERT, MILD_ALERT, or HIGH_ALERT)
- * @param emergency_id Optional emergency identifier (default: 0)
- * @param emergency_text Optional emergency description text (default: empty string)
- * @param timestamp Optional timestamp (default: millis(), will use current millis if not specified)
- * @return true if successful, false if service doesn't exist
- * @note This method atomically updates all error characteristics and sends notification for alert level
- */
 bool BTErrRepClass::reportError(AlertLevel alert_level, uint16_t emergency_id, const std::string& emergency_text, uint32_t timestamp) {
   if (error_report_service == nullptr) return false;
   if (alert_level_characteristic == nullptr || emergency_id_characteristic == nullptr || emergency_text_characteristic == nullptr || device_time_characteristic == nullptr) return false;

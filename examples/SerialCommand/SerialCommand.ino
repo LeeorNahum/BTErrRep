@@ -1,7 +1,5 @@
 #include <BTErrRep.h>
 
-BTErrRep errorReport(nullptr);
-
 void setup() {
   Serial.begin(115200);
   while (!Serial) delay(10);
@@ -11,12 +9,10 @@ void setup() {
   
   // Initialize BLE
   NimBLEDevice::init("Error Reporter");
+  NimBLEDevice::createServer();
   
-  // Create Error Report Service
-  errorReport = BTErrRep(NimBLEDevice::createServer());
-  
-  // Start the service
-  errorReport.startService();
+  // Start the Error Report Service
+  BTErrRep.startService();
   
   // Start advertising
   NimBLEDevice::getAdvertising()->start();
@@ -38,42 +34,42 @@ void loop() {
     }
     else if (command == "clear") {
       Serial.println("Clearing all alerts...");
-      errorReport.reportError(AlertLevel::NO_ALERT, 3000, "System normal");
+      BTErrRep.reportError(AlertLevel::NO_ALERT, 3000, "System normal");
       Serial.println("Alert cleared");
     }
     else if (command == "low") {
       Serial.println("Reporting low severity error...");
-      errorReport.reportError(AlertLevel::MILD_ALERT, 3001, "Low priority warning");
+      BTErrRep.reportError(AlertLevel::MILD_ALERT, 3001, "Low priority warning");
       Serial.println("Low severity alert sent");
     }
     else if (command == "high") {
       Serial.println("Reporting high severity error...");
-      errorReport.reportError(AlertLevel::HIGH_ALERT, 3002, "Critical system error");
+      BTErrRep.reportError(AlertLevel::HIGH_ALERT, 3002, "Critical system error");
       Serial.println("High severity alert sent");
     }
     else if (command == "battery") {
       Serial.println("Reporting battery warning...");
-      errorReport.reportError(AlertLevel::MILD_ALERT, 3003, "Battery level low");
+      BTErrRep.reportError(AlertLevel::MILD_ALERT, 3003, "Battery level low");
       Serial.println("Battery warning sent");
     }
     else if (command == "temp") {
       Serial.println("Reporting temperature alert...");
-      errorReport.reportError(AlertLevel::HIGH_ALERT, 3004, "Temperature critical");
+      BTErrRep.reportError(AlertLevel::HIGH_ALERT, 3004, "Temperature critical");
       Serial.println("Temperature alert sent");
     }
     else if (command == "memory") {
       Serial.println("Reporting memory warning...");
-      errorReport.reportError(AlertLevel::MILD_ALERT, 3005, "Memory usage high");
+      BTErrRep.reportError(AlertLevel::MILD_ALERT, 3005, "Memory usage high");
       Serial.println("Memory warning sent");
     }
     else if (command == "network") {
       Serial.println("Reporting network error...");
-      errorReport.reportError(AlertLevel::HIGH_ALERT, 3006, "Network connection lost");
+      BTErrRep.reportError(AlertLevel::HIGH_ALERT, 3006, "Network connection lost");
       Serial.println("Network error sent");
     }
     else if (command == "sensor") {
       Serial.println("Reporting sensor failure...");
-      errorReport.reportError(AlertLevel::HIGH_ALERT, 3007, "Sensor malfunction detected");
+      BTErrRep.reportError(AlertLevel::HIGH_ALERT, 3007, "Sensor malfunction detected");
       Serial.println("Sensor failure sent");
     }
     else if (command == "custom") {
@@ -83,7 +79,7 @@ void loop() {
       customMessage.trim();
       
       Serial.println("Reporting custom error...");
-      errorReport.reportError(AlertLevel::MILD_ALERT, 3099, customMessage);
+      BTErrRep.reportError(AlertLevel::MILD_ALERT, 3099, customMessage);
       Serial.println("Custom error sent: " + customMessage);
     }
     else if (command.length() > 0) {

@@ -4,7 +4,7 @@
 #include <BTErrRep.h>
 #include <esp_system.h>
 
-void checkAndReportCrash(BTErrRep& error_report);
+void checkAndReportCrash(BTErrRepClass& error_report);
 void bleStartErrorReportService();
 
 #endif // BLE_ERROR_REPORT_SERVICE_H 
